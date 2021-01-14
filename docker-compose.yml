@@ -1,0 +1,25 @@
+version: "3.2"
+services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./provisioning:/etc/grafana/provisioning
+      - ./jmx-dashboard.json:/var/lib/grafana/dashboards/jmx-dashboard.json
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+      - "8081:8081"
